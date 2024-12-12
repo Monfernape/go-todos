@@ -11,6 +11,12 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
+type DatabaseTable string
+
+const (
+	TodosTable DatabaseTable = "todos"
+)
+
 func GetTodos(w http.ResponseWriter, r *http.Request) {
 	mongoClient := db.GetMongoClient()
 	cursor, err := mongoClient.Database("todos").Collection("todos").Find(context.Background(), bson.D{})
@@ -27,7 +33,6 @@ func GetTodos(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to decode todos", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println("This will list all todos")
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(todos)
@@ -40,7 +45,7 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	newTodo, err := mongoClient.Database("todos").Collection("todos").InsertOne(context.Background(), todo)
+	newTodo, err := mongoClient.Database(TodosTable).Collection("todos").InsertOne(context.Background(), todo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
