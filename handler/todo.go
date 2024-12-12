@@ -45,7 +45,7 @@ func CreateTodo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
 
-	newTodo, err := mongoClient.Database(TodosTable).Collection("todos").InsertOne(context.Background(), todo)
+	newTodo, err := mongoClient.Database(string(TodosTable)).Collection("todos").InsertOne(context.Background(), todo)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	}
