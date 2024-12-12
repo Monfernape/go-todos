@@ -19,7 +19,7 @@ const (
 
 func GetTodos(w http.ResponseWriter, r *http.Request) {
 	mongoClient := db.GetMongoClient()
-	cursor, err := mongoClient.Database("todos").Collection("todos").Find(context.Background(), bson.D{})
+	cursor, err := mongoClient.Database("todos").Collection("todos").Find(context.Background(), bson.M{})
 	if err != nil {
 		fmt.Println(err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
